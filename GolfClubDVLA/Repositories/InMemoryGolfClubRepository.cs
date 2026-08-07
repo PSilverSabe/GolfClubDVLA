@@ -4,7 +4,7 @@ using GolfClubDVLA.Models;
 namespace GolfClubDVLA.Repositories;
 
 /// <summary>
-/// Implementation of IGolfClubRepository that stores data in memory. Could be replaced with a database-backed implementation in the future.
+/// Implementation of IGolfClubRepository that stores data in memory. Could be replaced with a database-backed implementation in the future
 /// </summary>
 public sealed class InMemoryGolfClubRepository : IGolfClubRepository
 {

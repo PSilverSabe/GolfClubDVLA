@@ -23,11 +23,6 @@ public sealed record Member
             throw new ArgumentException("Name must not be empty.", nameof(name));
         }
 
-        if (handicap is < 0 or > 54)
-        {
-            throw new ArgumentOutOfRangeException(nameof(handicap), "Handicap must be between 0 and 54 (the standard WHS range).");
-        }
-
         Number = number;
         Name = name.Trim();
         Handicap = handicap;
