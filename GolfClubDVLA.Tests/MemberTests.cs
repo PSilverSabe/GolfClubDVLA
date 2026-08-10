@@ -17,6 +17,17 @@ public class MemberTests
     }
 
     [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public void Constructor_WithNonPositiveNumberForPar_Success(int number)
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Member(number, "Jim Parr", 10));
+
+        Member member = new(1, "Jim Parr", number);
+        Assert.True(member.Handicap == 0 || member.Handicap == -1);
+    }
+
+    [Theory]
     [InlineData("")]
     [InlineData("   ")]
     [InlineData(null)]
