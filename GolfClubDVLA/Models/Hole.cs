@@ -9,7 +9,9 @@ public sealed record Hole
 
     public int Par { get; }
 
-    public Hole(int number, int par)
+    public decimal Distance { get; set; }
+
+    public Hole(int number, int par, decimal distance)
     {
         if (number <= 0)
         {
@@ -21,7 +23,13 @@ public sealed record Hole
             throw new ArgumentOutOfRangeException(nameof(par), "Par must be between 1 and 10.");
         }
 
+        if (distance <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(distance), "Distance cannot be negative.");
+        }
+
         Number = number;
         Par = par;
+        Distance = distance;
     }
 }

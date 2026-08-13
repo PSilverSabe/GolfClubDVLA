@@ -37,6 +37,28 @@ public sealed class GolfClubService(IGolfClubRepository repository, ILogger<Golf
     }
 
     /// <summary>
+    /// Gets the total distance of all holes on the course
+    /// </summary>
+    public async Task<decimal> GetTotalDistanceOfAllHolesAync(CancellationToken cancellationToken = default)
+    {
+        _logger.LogInformation("Calculating total distance of all holes.");
+        IReadOnlyList<Hole> holes = await _repository.GetHolesAsync(cancellationToken);
+        decimal totalDistance = holes.Sum(h => h.Distance);
+        _logger.LogInformation("Total distance calculated: {TotalDistance}", totalDistance);
+        return totalDistance;
+    }
+
+    public async Task<decimal> GetAverageOfAllHolesAsync(CancellationToken cancellationToken = default)
+    {
+        _logger.LogInformation("Calculating average distance of all holes.");
+        IReadOnlyList<Hole> holes = await _repository.GetHolesAsync(cancellationToken);
+        decimal averageDistance = holes.Average(h => h.Distance);
+        _logger.LogInformation("Average distance calculated: {AverageDistance}", averageDistance);
+
+        return averageDistance;
+    }
+
+    /// <summary>
     /// Average handicap across all members
     /// </summary>
     public async Task<double> AverageHandicapAsync(CancellationToken cancellationToken = default)

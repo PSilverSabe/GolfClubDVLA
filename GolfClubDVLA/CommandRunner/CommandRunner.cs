@@ -32,6 +32,14 @@ public static class CommandRunner
                 PrintMembers(await club.MembersWithHandicapBelowAsync(ParseInt(args[1], "maxHandicap"), cancellationToken));
                 break;
 
+            case "--get-total-distance":
+                Console.WriteLine(await club.GetTotalDistanceOfAllHolesAync(cancellationToken));
+                break;
+
+            case "--get-average-distance":
+                Console.WriteLine(await club.GetAverageOfAllHolesAsync(cancellationToken));
+                break;
+
             case "--find-member":
                 throw new NotImplementedException("find-member is not implemented.");
 

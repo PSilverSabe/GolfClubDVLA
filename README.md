@@ -1,7 +1,6 @@
 # DVLA Golf Club Coding Exercise
 This is my (Joshua Fletcher's) solution to the coding exercise, implemented in C# 10.0/.NET 10.0.
 
-
 ## Run it
 Currently only 'total-par' and 'members-below' are implemented, but the rest of the commands are stubbed out and will print a message that they aren't implemented yet.
 

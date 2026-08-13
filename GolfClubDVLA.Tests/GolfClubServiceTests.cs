@@ -24,9 +24,9 @@ public class GolfClubServiceTests
     public async Task TotalParAsync_WithMultipleHoles_ReturnsSumOfPar()
     {
         using InMemoryGolfClubRepository repository = new();
-        await repository.AddHoleAsync(new Hole(1, 4), TestContext.Current.CancellationToken);
-        await repository.AddHoleAsync(new Hole(2, 3), TestContext.Current.CancellationToken);
-        await repository.AddHoleAsync(new Hole(3, 5), TestContext.Current.CancellationToken);
+        await repository.AddHoleAsync(new Hole(1, 4, 340), TestContext.Current.CancellationToken);
+        await repository.AddHoleAsync(new Hole(2, 3, 250), TestContext.Current.CancellationToken);
+        await repository.AddHoleAsync(new Hole(3, 5, 600), TestContext.Current.CancellationToken);
         GolfClubService club = CreateService(repository);
 
         int totalPar = await club.TotalParAsync(TestContext.Current.CancellationToken);
@@ -50,9 +50,9 @@ public class GolfClubServiceTests
     public async Task MembersWithHandicapBelowAsync_ReturnsOnlyMembersStrictlyBelowThreshold()
     {
         using InMemoryGolfClubRepository repository = new();
-        await repository.AddMemberAsync(new Member(1, "Jim Parr", 10), TestContext.Current.CancellationToken);
-        await repository.AddMemberAsync(new Member(2, "Jon Rahm", 4), TestContext.Current.CancellationToken);
-        await repository.AddMemberAsync(new Member(3, "Ernie Elsif", 18), TestContext.Current.CancellationToken);
+        await repository.AddMemberAsync(new Member(1, "Jim Parr", 10, 83), TestContext.Current.CancellationToken);
+        await repository.AddMemberAsync(new Member(2, "Jon Rahm", 4, 79), TestContext.Current.CancellationToken);
+        await repository.AddMemberAsync(new Member(3, "Ernie Elsif", 18, 88), TestContext.Current.CancellationToken);
         GolfClubService club = CreateService(repository);
 
         IReadOnlyList<Member> result = await club.MembersWithHandicapBelowAsync(11, TestContext.Current.CancellationToken);
@@ -67,12 +67,50 @@ public class GolfClubServiceTests
     public async Task MembersWithHandicapBelowAsync_ThresholdEqualToHandicap_ExcludesThatMember()
     {
         using InMemoryGolfClubRepository repository = new();
-        await repository.AddMemberAsync(new Member(1, "Jim Parr", 10), TestContext.Current.CancellationToken);
+        await repository.AddMemberAsync(new Member(1, "Jim Parr", 10, 83), TestContext.Current.CancellationToken);
         GolfClubService club = CreateService(repository);
 
         IReadOnlyList<Member> result = await club.MembersWithHandicapBelowAsync(10, TestContext.Current.CancellationToken);
 
         Assert.Empty(result);
+    }
+
+    [Fact]
+    public async Task GetAllHoles_CalculateSumOfDistance_Success()
+    {
+        using InMemoryGolfClubRepository repository = new();
+        await repository.AddHoleAsync(new Hole(1, 4, 340), TestContext.Current.CancellationToken);
+        await repository.AddHoleAsync(new Hole(2, 3, 250), TestContext.Current.CancellationToken);
+        await repository.AddHoleAsync(new Hole(3, 5, 600), TestContext.Current.CancellationToken);
+        await repository.AddHoleAsync(new Hole(4, 3, 210), TestContext.Current.CancellationToken);
+
+        GolfClubService club = CreateService(repository);
+        decimal totalDistance = await club.GetTotalDistanceOfAllHolesAync(TestContext.Current.CancellationToken);
+        Assert.Equal(1400, totalDistance);
+    }
+
+    [Fact]
+    public async Task GetAllHoles_WithNoHoles_CalculateSumOfDistance_ReturnsEmptyListAndFailure()
+    {
+        using InMemoryGolfClubRepository repository = new();
+        GolfClubService club = CreateService(repository);
+        decimal totalDistance = await club.GetTotalDistanceOfAllHolesAync(TestContext.Current.CancellationToken);
+
+        Assert.Equal(0, totalDistance);
+    }
+
+    [Fact]
+    public async Task GetAllHoles_WithDistanceExisting_GetAverage_Success()
+    {
+        using InMemoryGolfClubRepository repository = new();
+        await repository.AddHoleAsync(new Hole(1, 4, 340), TestContext.Current.CancellationToken);
+        await repository.AddHoleAsync(new Hole(2, 3, 250), TestContext.Current.CancellationToken);
+        await repository.AddHoleAsync(new Hole(3, 5, 600), TestContext.Current.CancellationToken);
+        await repository.AddHoleAsync(new Hole(4, 3, 210), TestContext.Current.CancellationToken);
+
+        GolfClubService club = CreateService(repository);
+        decimal averageDistance = await club.GetAverageOfAllHolesAsync(TestContext.Current.CancellationToken);
+        Assert.Equal(350, averageDistance);
     }
 
     [Fact]
@@ -138,7 +176,7 @@ public class GolfClubServiceTests
         GolfClubService club = CreateService(repository);
 
         await Assert.ThrowsAsync<NotImplementedException>(
-            () => club.AddMemberAsync(new Member(5, "Tiger Woods", 0), TestContext.Current.CancellationToken));
+            () => club.AddMemberAsync(new Member(5, "Tiger Woods", 0, 1), TestContext.Current.CancellationToken));
     }
 
     [Fact]

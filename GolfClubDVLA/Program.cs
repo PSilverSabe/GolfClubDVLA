@@ -55,17 +55,17 @@ static async Task SeedAsync(IGolfClubRepository repository, ILogger logger, Canc
     // We need to seed the in memory files, normally we'd use a database and migrations but for this demo we will just seed the data in memory.
     List<Hole> holes =
     [
-        new(number: 1, par: 4),
-        new(number: 2, par: 3),
-        new(number: 3, par: 5),
-        new(number: 4, par: 3),
+        new(number: 1, par: 4, distance: 340),
+        new(number: 2, par: 3, distance: 250),
+        new(number: 3, par: 5, distance: 600),
+        new(number: 4, par: 3, distance: 210),
     ];
 
     List<Member> members =
     [
-        new(number: 1, name: "Jim Parr", handicap: 10),
-        new(number: 2, name: "Jon Rahm", handicap: 4),
-        new(number: 3, name: "Ernie Elsif", handicap: 18),
+        new(number: 1, name: "Jim Parr", handicap: 10, recentScore: 83),
+        new(number: 2, name: "Jon Rahm", handicap: 4, recentScore: 79),
+        new(number: 3, name: "Ernie Elsif", handicap: 18, recentScore: 88),
     ];
 
     logger.LogDebug("Seeding in-memory store...");

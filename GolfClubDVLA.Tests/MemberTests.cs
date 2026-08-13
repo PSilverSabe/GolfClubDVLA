@@ -13,17 +13,36 @@ public class MemberTests
     [InlineData(-1)]
     public void Constructor_WithNonPositiveNumber_ThrowsArgumentOutOfRangeException(int number)
     {
-        Assert.Throws<ArgumentOutOfRangeException>(() => new Member(number, "Jim Parr", 10));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Member(number, "Jim Parr", 10, 83));
     }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public void Constructor_WithNonPositiveOrZeroNumberInRecentScore_ThrowsArgumentOutOfRangeException(int number)
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Member(1, "Jim Parr", 10, number));
+    }
+
+    [Theory]
+    [InlineData(83)]
+    [InlineData(1)]
+    public void Constructor_WithPositiveNumberInRecentScore_Success(int number)
+    {
+
+        Member member = new(1, "Jim Parr", 10, number);
+        Assert.Equal(number, member.RecentScore);
+    }
+
 
     [Theory]
     [InlineData(0)]
     [InlineData(-1)]
     public void Constructor_WithNonPositiveNumberForHandicap_Success(int number)
     {
-        Assert.Throws<ArgumentOutOfRangeException>(() => new Member(number, "Jim Parr", 10));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Member(number, "Jim Parr", 10, 83));
 
-        Member member = new(1, "Jim Parr", number);
+        Member member = new(1, "Jim Parr", number, 83);
         Assert.True(member.Handicap == 0 || member.Handicap == -1);
     }
 
@@ -33,13 +52,13 @@ public class MemberTests
     [InlineData(null)]
     public void Constructor_WithEmptyOrWhitespaceName_ThrowsArgumentException(string? name)
     {
-        Assert.Throws<ArgumentException>(() => new Member(1, name!, 10));
+        Assert.Throws<ArgumentException>(() => new Member(1, name!, 10, 111));
     }
 
     [Fact]
     public void Constructor_TrimsWhitespaceFromName()
     {
-        Member member = new(1, "  Jim Parr  ", 10);
+        Member member = new(1, "  Jim Parr  ", 10, 83);
 
         Assert.Equal("Jim Parr", member.Name);
     }
@@ -47,10 +66,11 @@ public class MemberTests
     [Fact]
     public void Constructor_WithValidValues_SetsAllProperties()
     {
-        Member member = new(7, "Jon Rahm", 4);
+        Member member = new(7, "Jon Rahm", 4, 79);
 
         Assert.Equal(7, member.Number);
         Assert.Equal("Jon Rahm", member.Name);
         Assert.Equal(4, member.Handicap);
+        Assert.Equal(79, member.RecentScore);
     }
 }

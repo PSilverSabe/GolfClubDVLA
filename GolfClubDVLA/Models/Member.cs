@@ -11,7 +11,9 @@ public sealed record Member
 
     public int Handicap { get; }
 
-    public Member(int number, string name, int handicap)
+    public int RecentScore { get; }
+
+    public Member(int number, string name, int handicap, int recentScore)
     {
         if (number <= 0)
         {
@@ -23,8 +25,14 @@ public sealed record Member
             throw new ArgumentException("Name must not be empty.", nameof(name));
         }
 
+        if (recentScore <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(recentScore), "Score must be a positive number exceeding zero.");
+        }
+
         Number = number;
         Name = name.Trim();
         Handicap = handicap;
+        RecentScore = recentScore;
     }
 }
